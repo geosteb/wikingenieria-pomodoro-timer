@@ -12,9 +12,21 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            height: 100vh;
+            /* Esto asegura que el footer se vaya abajo aunque haya poco contenido */
+            min-height: 100vh; 
             margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* --- CONTENIDO PRINCIPAL (Empuja el footer abajo) --- */
+        main {
+            flex: 1; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
         }
 
         h1 {
@@ -22,6 +34,7 @@
             letter-spacing: -1px;
             margin-bottom: 40px;
             color: #e0e0e0;
+            text-align: center;
         }
 
         .menu-container {
@@ -29,14 +42,14 @@
             flex-direction: column;
             gap: 15px;
             width: 100%;
-            max-width: 300px;
+            max-width: 320px;
         }
 
         .link-card {
             background-color: #2f2f2f;
             color: #ffffff;
             text-decoration: none;
-            padding: 20px;
+            padding: 18px;
             border-radius: 12px;
             text-align: center;
             font-weight: 500;
@@ -45,41 +58,105 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .link-card:hover {
             background-color: #3f3f3f;
             transform: translateY(-2px);
-            border-color: #fbbf24; /* Amarillo Wikingeniería al pasar el ratón */
+            border-color: #fbbf24; /* Amarillo Wikingeniería */
             color: #fbbf24;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
         .icon { font-size: 1.2rem; }
-        
+
+        /* --- FOOTER DISEÑADO --- */
         footer {
+            width: 100%;
+            max-width: 400px;
             margin-top: 50px;
-            font-size: 0.8rem;
-            color: #555;
+            text-align: center;
+            border-top: 1px solid #333; /* Línea sutil */
+            padding-top: 20px;
         }
+
+        .brand-link {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #e0e0e0;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+            transition: color 0.3s;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+        
+        .brand-link:hover {
+            color: #fbbf24; /* Amarillo al pasar ratón */
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+        }
+
+        .social-links a {
+            color: #666;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .social-links a:hover { color: #fbbf24; }
+
+        .copyright {
+            font-size: 0.75rem;
+            color: #444;
+        }
+
     </style>
 </head>
 <body>
 
-    <h1>⚡ Wikingeniería Notion Widgets</h1>
+    <main>
+        <h1>⚡ Wikingeniería Notion Widgets</h1>
 
-    <div class="menu-container">
-        <a href="pomodoro.html" class="link-card">
-            <span class="icon">🍅</span> Pomodoro Timer
-        </a>
+        <div class="menu-container">
+            <a href="pomodoro.html" class="link-card">
+                <span class="icon">🍅</span> Pomodoro Timer
+            </a>
 
-        <a href="barra-progreso-cuatrimestre.html" class="link-card">
-            <span class="icon">📊</span> Barra Semestre
+            <a href="barra.html" class="link-card">
+                <span class="icon">📊</span> Barra Cuatrimestre
+            </a>
+
+            </div>
+    </main>
+
+    <footer>
+        <a href="https://wikingenieria.com" target="_blank" class="brand-link">
+            wikingenieria.com ↗
         </a>
         
+        <div class="social-links">
+            <a href="https://instagram.com/wikingenieria" target="_blank">Instagram</a>
+            <span>•</span>
+            <a href="https://twitter.com/wikingenieria" target="_blank">Twitter / X</a>
+            <span>•</span>
+            <a href="https://facebook.com/wikingenieria" target="_blank">Facebook</a>
+            <span>•</span>
+            <a href="https://www.tiktok.com/@wikingenieria" target="_blank">TikTok</a>
+            <span>•</span>
+            <a href="https://wikingenieria.gumroad.com/" target="_blank">Tienda</a>
         </div>
 
-    <footer>Status: Operational 🟢</footer>
+        <div class="copyright">
+            © 2026 Ingeniería en Modo Fácil
+        </div>
+    </footer>
 
 </body>
 </html>
