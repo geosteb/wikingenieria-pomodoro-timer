@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <style>
         body {
-            background-color: #191919; /* Fondo Dark Mode de Notion */
+            background-color: #191919;
             color: #ffffff;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             display: flex;
@@ -14,10 +14,9 @@
             height: 100vh;
             margin: 0;
             overflow: hidden;
-            user-select: none; /* Evita que se seleccione el texto al hacer doble click */
+            user-select: none;
         }
         
-        /* BOTONES DE MODO (Arriba) */
         .mode-selector {
             display: flex;
             background: #252525;
@@ -44,40 +43,38 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
 
-        /* EL RELOJ */
         .timer-display {
             font-size: 4.5rem;
             font-weight: 700;
-            font-variant-numeric: tabular-nums; /* Evita que los números bailen */
+            font-variant-numeric: tabular-nums;
             line-height: 1;
             margin-top: 10px;
             color: #ffffff;
             letter-spacing: -2px;
         }
 
-        /* TEXTO DE ESTADO (Pausado) */
+        /* --- TUS MÁRGENES AJUSTADOS --- */
         .status-text {
             font-size: 0.85rem;
             color: #666;
-            height: 20px; /* Altura fija para que no salte el diseño */
-            margin-top: 25px; /* Espacio entre los Números y el Texto */
-            margin-bottom: 25px; /* Espacio entre el Texto y los Botones amarillos */
+            height: 20px;
+            margin-top: 25px;    /* Más espacio arriba */
+            margin-bottom: 25px; /* Más espacio abajo */
             font-weight: 500;
             letter-spacing: 1px;
             text-transform: uppercase;
+            transition: color 0.3s;
         }
 
-        /* CONTROLES PRINCIPALES */
         .controls {
             display: flex;
             gap: 15px;
             align-items: center;
         }
 
-        /* Botón Play Amarillo */
         .action-btn {
-            background: #fbbf24; /* Amarillo Ingeniería */
-            color: #191919; /* Icono negro */
+            background: #fbbf24;
+            color: #191919;
             border: none;
             width: 60px;
             height: 60px;
@@ -89,20 +86,10 @@
             transition: transform 0.1s, background 0.2s;
             box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
         }
-        .action-btn:hover { 
-            background: #f59e0b; 
-            transform: scale(1.05);
-        }
+        .action-btn:hover { background: #f59e0b; transform: scale(1.05); }
         .action-btn:active { transform: scale(0.95); }
-        
-        .action-btn svg {
-            width: 24px;
-            height: 24px;
-            fill: currentColor;
-            display: block; /* Asegura centrado */
-        }
+        .action-btn svg { width: 24px; height: 24px; fill: currentColor; display: block; }
 
-        /* Botón Reset */
         .reset-btn {
             background: #333;
             color: #888;
@@ -118,43 +105,44 @@
         }
         .reset-btn:hover { background: #444; color: #fff; transform: rotate(180deg); }
         .reset-btn svg { width: 20px; height: 20px; fill: currentColor; }
-
     </style>
 </head>
 <body>
 
     <div class="mode-selector">
-        <button class="mode-btn selected" onclick="setMode(25)">Fácil (25/5)</button>
-        <button class="mode-btn" onclick="setMode(50)">Difícil (50/10)</button>
-        <button class="mode-btn" onclick="setMode(20)">Descanso (20)</button>
+        <button class="mode-btn selected" onclick="setMode(25, 5)">Fácil (25/5)</button>
+        <button class="mode-btn" onclick="setMode(50, 10)">Difícil (50/10)</button>
+        <button class="mode-btn" onclick="setMode(20, 0)">Descanso (20)</button>
     </div>
 
     <div class="timer-display" id="timer">25:00</div>
-    
-    <div class="status-text" id="status">PAUSADO</div>
+    <div class="status-text" id="status">LISTO</div>
 
     <div class="controls">
-        <button class="action-btn" onclick="toggleTimer()" id="actionBtn" title="Play/Pausa">
+        <button class="action-btn" onclick="toggleTimer()" id="actionBtn">
             <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
         </button>
-        
-        <button class="reset-btn" onclick="resetTimer()" title="Reiniciar">
+        <button class="reset-btn" onclick="resetTimer()">
             <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
         </button>
     </div>
 
     <script>
-        let timeLeft = 25 * 60;
+        // Variables de configuración
+        let workDuration = 25;
+        let breakDuration = 5;
+        
+        // Variables de estado
+        let timeLeft = workDuration * 60;
         let timerId = null;
         let isRunning = false;
-        let currentTotalTime = 25;
-        
+        let isBreakMode = false; // ¿Estamos en descanso?
+
         const timerDisplay = document.getElementById('timer');
         const statusText = document.getElementById('status');
         const actionBtn = document.getElementById('actionBtn');
         const buttons = document.querySelectorAll('.mode-btn');
 
-        // Iconos SVG
         const iconPlay = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
         const iconPause = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
 
@@ -167,18 +155,16 @@
 
         function toggleTimer() {
             if (isRunning) {
-                // PAUSAR
                 clearInterval(timerId);
                 isRunning = false;
                 actionBtn.innerHTML = iconPlay;
                 statusText.textContent = "PAUSADO";
-                statusText.style.opacity = "1";
+                statusText.style.color = "#666";
             } else {
-                // INICIAR
                 isRunning = true;
                 actionBtn.innerHTML = iconPause;
-                statusText.textContent = "EN FOCO";
-                statusText.style.opacity = "0.4"; // Texto más sutil mientras corre
+                statusText.textContent = isBreakMode ? "DESCANSANDO..." : "EN FOCO";
+                statusText.style.color = isBreakMode ? "#4ade80" : "#fbbf24"; // Verde si descansa, Amarillo si trabaja
                 
                 timerId = setInterval(() => {
                     if (timeLeft > 0) {
@@ -194,24 +180,44 @@
         function finishTimer() {
             clearInterval(timerId);
             isRunning = false;
-            // Sonido de sistema simple (beep)
+            actionBtn.innerHTML = iconPlay;
+            
+            // Sonido
             try { new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg').play(); } catch(e){}
-            alert("¡Tiempo completado!");
-            resetTimer();
+
+            // LÓGICA DE CAMBIO AUTOMÁTICO
+            if (!isBreakMode && breakDuration > 0) {
+                // Si estábamos trabajando -> Toca descanso
+                isBreakMode = true;
+                timeLeft = breakDuration * 60;
+                statusText.textContent = "¡TIEMPO DE DESCANSO!";
+                statusText.style.color = "#4ade80"; // Texto verde
+                alert("¡Fin del trabajo! Tómate un descanso.");
+            } else {
+                // Si estábamos descansando -> Toca trabajar
+                isBreakMode = false;
+                timeLeft = workDuration * 60;
+                statusText.textContent = "¡VOLVER AL TRABAJO!";
+                statusText.style.color = "#fbbf24"; // Texto amarillo
+                if(breakDuration > 0) alert("¡Descanso terminado! A trabajar.");
+            }
+            updateDisplay();
         }
 
         function resetTimer() {
             clearInterval(timerId);
             isRunning = false;
-            timeLeft = currentTotalTime * 60;
+            isBreakMode = false; // Al resetear siempre volvemos al modo trabajo
+            timeLeft = workDuration * 60;
             actionBtn.innerHTML = iconPlay;
             statusText.textContent = "LISTO";
-            statusText.style.opacity = "1";
+            statusText.style.color = "#666";
             updateDisplay();
         }
 
-        function setMode(minutes) {
-            currentTotalTime = minutes;
+        function setMode(work, rest) {
+            workDuration = work;
+            breakDuration = rest;
             
             // Actualizar estilo botones
             buttons.forEach(btn => btn.classList.remove('selected'));
@@ -222,5 +228,3 @@
     </script>
 </body>
 </html>
-
-
