@@ -51,7 +51,7 @@
             margin-top: 10px;
             color: #ffffff;
             letter-spacing: -2px;
-            transition: color 0.3s ease; /* Transición suave de color */
+            transition: color 0.3s ease;
         }
 
         /* --- MÁRGENES A 25PX --- */
@@ -59,9 +59,9 @@
             font-size: 0.85rem;
             color: #666;
             height: 20px;
-            margin-top: 25px;    /* 25px exactos */
-            margin-bottom: 25px; /* 25px exactos */
-            font-weight: 700;    /* Un poco más gordita la letra */
+            margin-top: 25px;    
+            margin-bottom: 25px; 
+            font-weight: 700;
             letter-spacing: 1.5px;
             text-transform: uppercase;
             transition: color 0.3s;
@@ -132,9 +132,9 @@
 
     <script>
         // Variables de configuración
-        let workDuration = 0.0833; // Empieza en 5 segundos para el test
-        let breakDuration = 0.0833; // Descanso de 5 segundos
-        let isLongBreakType = false; // Controla si es el botón de descanso largo
+        let workDuration = 0.0833; 
+        let breakDuration = 0.0833;
+        let isLongBreakType = false;
         
         // Variables de estado
         let timeLeft = workDuration * 60;
@@ -151,7 +151,6 @@
         const iconPause = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
 
         function updateDisplay() {
-            // Lógica para que muestre 05 en vez de 0 cuando es < 1 min en modo test
             let totalSeconds = Math.round(timeLeft);
             const m = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
             const s = (totalSeconds % 60).toString().padStart(2, '0');
@@ -169,14 +168,21 @@
             } else {
                 isRunning = true;
                 actionBtn.innerHTML = iconPause;
-                statusText.textContent = isBreakMode ? "DESCANSANDO..." : "MODO FOCUS";
                 
-                // Si es descanso: Verde/Azul. Si es Focus: Amarillo.
-                // PERO si es "Descanso Largo" (modo especial), el texto se queda azul.
-                if (isBreakMode) {
-                     statusText.style.color = "#93c5fd"; // Azul Pastel
+                // --- LÓGICA CORREGIDA AQUÍ ---
+                if (isLongBreakType) {
+                    // Si es Descanso Largo: Texto rojo pastel y mensaje "DESCANSANDO..."
+                    statusText.textContent = "DESCANSANDO...";
+                    statusText.style.color = "#fca5a5"; 
                 } else {
-                     statusText.style.color = "#fbbf24"; // Amarillo
+                    // Ciclo Normal (Focus / Break)
+                    statusText.textContent = isBreakMode ? "DESCANSANDO..." : "MODO FOCUS";
+                    
+                    if (isBreakMode) {
+                         statusText.style.color = "#93c5fd"; // Azul Pastel
+                    } else {
+                         statusText.style.color = "#fbbf24"; // Amarillo
+                    }
                 }
                 
                 timerId = setInterval(() => {
@@ -198,29 +204,25 @@
             try { new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg').play(); } catch(e){}
 
             if (!isBreakMode && breakDuration > 0) {
-                // TOCA DESCANSO
                 isBreakMode = true;
                 timeLeft = breakDuration * 60;
                 statusText.textContent = "TIEMPO DE DESCANSO";
                 statusText.style.color = "#93c5fd"; // Azul Pastel
-                // En descanso normal, números blancos
                 timerDisplay.style.color = "#ffffff"; 
                 alert("¡Fin del trabajo! Tómate un descanso.");
             } else {
-                // TOCA TRABAJAR (O FIN SI ERA DESCANSO LARGO)
                 isBreakMode = false;
                 timeLeft = workDuration * 60;
                 
                 if(breakDuration === 0) {
-                    // Si era descanso largo y acaba
+                    // Fin Descanso Largo
                     statusText.textContent = "LISTO";
                     statusText.style.color = "#666";
-                    timerDisplay.style.color = "#fca5a5"; // Se mantiene rojo si estamos en ese modo
+                    timerDisplay.style.color = "#fca5a5"; // Mantiene rojo
                 } else {
-                    // Vuelta al trabajo normal
                     statusText.textContent = "¡VOLVER AL TRABAJO!";
                     statusText.style.color = "#fbbf24"; // Amarillo
-                    timerDisplay.style.color = "#ffffff"; // Números blancos
+                    timerDisplay.style.color = "#ffffff"; 
                 }
                 
                 if(breakDuration > 0) alert("¡Descanso terminado! A trabajar.");
@@ -237,9 +239,8 @@
             statusText.textContent = "LISTO";
             statusText.style.color = "#666";
             
-            // Si estamos en modo Descanso Largo, mantenemos números rojos
             if(isLongBreakType) {
-                timerDisplay.style.color = "#fca5a5"; // Rojo Pastel
+                timerDisplay.style.color = "#fca5a5"; 
             } else {
                 timerDisplay.style.color = "#ffffff";
             }
@@ -252,7 +253,6 @@
             breakDuration = rest;
             isLongBreakType = isLongBreak;
             
-            // Actualizar estilo botones
             buttons.forEach(btn => btn.classList.remove('selected'));
             event.target.classList.add('selected');
             
