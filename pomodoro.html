@@ -15,6 +15,22 @@
             margin: 0;
             overflow: hidden;
             user-select: none;
+            position: relative; /* Necesario para posicionar el título */
+        }
+
+        /* --- NUEVO TÍTULO --- */
+        .widget-title {
+            position: absolute;
+            top: 15px; /* Ajusta esto si lo quieres más arriba o abajo */
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #888; /* Color gris suave igual que Notion */
+            z-index: 10;
         }
         
         .mode-selector {
@@ -24,6 +40,8 @@
             border-radius: 8px;
             gap: 5px;
             margin-bottom: 5px;
+            /* Añadimos un pequeño margen arriba para que no choque con el título en pantallas muy pequeñas */
+            margin-top: 20px; 
         }
         .mode-btn {
             font-size: 0.75rem;
@@ -110,6 +128,8 @@
 </head>
 <body>
 
+    <div class="widget-title">MODO ENFOQUE - POMODORO</div>
+
     <div class="mode-selector">
         <button class="mode-btn selected" onclick="setMode(25, 5, false)">Tareas Fáciles [25/5]</button>
         
@@ -169,19 +189,16 @@
                 isRunning = true;
                 actionBtn.innerHTML = iconPause;
                 
-                // --- LÓGICA CORREGIDA AQUÍ ---
                 if (isLongBreakType) {
-                    // Si es Descanso Largo: Texto rojo pastel y mensaje "DESCANSANDO..."
                     statusText.textContent = "DESCANSANDO...";
                     statusText.style.color = "#fca5a5"; 
                 } else {
-                    // Ciclo Normal (Focus / Break)
                     statusText.textContent = isBreakMode ? "DESCANSANDO..." : "MODO FOCUS";
                     
                     if (isBreakMode) {
-                         statusText.style.color = "#93c5fd"; // Azul Pastel
+                         statusText.style.color = "#93c5fd"; 
                     } else {
-                         statusText.style.color = "#fbbf24"; // Amarillo
+                         statusText.style.color = "#fbbf24"; 
                     }
                 }
                 
@@ -207,7 +224,7 @@
                 isBreakMode = true;
                 timeLeft = breakDuration * 60;
                 statusText.textContent = "TIEMPO DE DESCANSO";
-                statusText.style.color = "#93c5fd"; // Azul Pastel
+                statusText.style.color = "#93c5fd"; 
                 timerDisplay.style.color = "#ffffff"; 
                 alert("¡Fin del trabajo! Tómate un descanso.");
             } else {
@@ -215,13 +232,12 @@
                 timeLeft = workDuration * 60;
                 
                 if(breakDuration === 0) {
-                    // Fin Descanso Largo
                     statusText.textContent = "LISTO";
                     statusText.style.color = "#666";
-                    timerDisplay.style.color = "#fca5a5"; // Mantiene rojo
+                    timerDisplay.style.color = "#fca5a5"; 
                 } else {
                     statusText.textContent = "¡VOLVER AL TRABAJO!";
-                    statusText.style.color = "#fbbf24"; // Amarillo
+                    statusText.style.color = "#fbbf24"; 
                     timerDisplay.style.color = "#ffffff"; 
                 }
                 
@@ -261,6 +277,3 @@
     </script>
 </body>
 </html>
-
-
-
